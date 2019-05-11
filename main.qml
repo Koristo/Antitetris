@@ -36,7 +36,7 @@ Item {
                 anchors.fill: parent
 
                 onPressed: {
-                    if (fig1.in_figure(mouseX, mouseY)) {
+                    if (fig1.in_figure(mouseX, mouseY, MyField)) {
                         drag.target = fig1
                     }
 
@@ -73,46 +73,50 @@ Item {
                     id: field
                     width: 100
                     height: 100
-                    color: color
+                    color: ColorData
                     border.width: 1
                     x: field_x
                     y: field_y
 
 
-                    states: [
-                        State {
-                            name: "clear"
-                            PropertyChanges {
-                                target: field
-                                color: "white"
-                            }
-                        },
-                        State {
-                            name: "contestation"
-                            PropertyChanges {
-                                target: field
-                                color: "grey"
-                            }
-                        },
-                        State {
-                            name: "busy"
-                            PropertyChanges {
-                                target: field
-                                color: "red"
-                            }
-                        }
+//                    states: [
+//                        State {
+//                            name: "clear"
+//                            PropertyChanges {
+//                                target: field
+//                                color: "white"
+//                            }
+//                        },
+//                        State {
+//                            name: "contestation"
+//                            PropertyChanges {
+//                                target: field
+//                                color: "grey"
+//                            }
+//                        },
+//                        State {
+//                            name: "busy"
+//                            PropertyChanges {
+//                                target: field
+//                                color: "red"
+//                            }
+//                        }
 
-                    ]
+//                    ]
                 }
 
                 onEntered: {
                     console.warn("Entered")
-                    field.state = "contestation"
+                    //field.state = "contestation"
+                    if (fig1.check_field(MyField, index)) {
+                        fig1.fill_field(MyField, index, "grey")
+                        //fig1.destroy()
+                    }
                 }
 
                 onExited: {
                     console.log("Exit")
-                    field.state = "clear"
+                    //field.state = "clear"
                 }
 
             }
