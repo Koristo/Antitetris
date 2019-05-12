@@ -37,14 +37,16 @@ Item {
 
                 onPressed: {
                     if (fig1.in_figure(mouseX, mouseY, MyField)) {
-                        drag.target = fig1
+                        drag.target = parent
                     }
 
                 }
                 onReleased: {
+
                     drag.target = null
                     fig1.x = 0
                     fig1.y = 0
+                    parent.Drag.drop()
                 }
             }
 
@@ -65,11 +67,8 @@ Item {
         height: 500
         model: MyField
         delegate:
-            DropArea {
-                width: 100
-                height: 100
-                Rectangle {
-                    anchors.fill: parent
+            Rectangle {
+                    //anchors.fill: parent
                     id: field
                     width: 100
                     height: 100
@@ -78,49 +77,37 @@ Item {
                     x: field_x
                     y: field_y
 
+                    DropArea {
+                        anchors.fill: parent
+                        id: da
+                        width: 100
+                        height: 100
 
-//                    states: [
-//                        State {
-//                            name: "clear"
-//                            PropertyChanges {
-//                                target: field
-//                                color: "white"
-//                            }
-//                        },
-//                        State {
-//                            name: "contestation"
-//                            PropertyChanges {
-//                                target: field
-//                                color: "grey"
-//                            }
-//                        },
-//                        State {
-//                            name: "busy"
-//                            PropertyChanges {
-//                                target: field
-//                                color: "red"
-//                            }
-//                        }
+                        onEntered: {
+                            console.warn("Entered")
+                            if (fig1.check_field(MyField, index)) {
+                                fig1.fill_field(MyField, index, "grey")
+                            }
+                        }
 
-//                    ]
-                }
+                        onExited: {
+                            console.log("Exit")
+                            if (fig1.check_field(MyField, index))
+                                fig1.fill_field(MyField, index, "white")
+                        }
+                        onDropped: {
+                            console.log("dropped")
 
-                onEntered: {
-                    console.warn("Entered")
-                    //field.state = "contestation"
-                    if (fig1.check_field(MyField, index)) {
-                        fig1.fill_field(MyField, index, "grey")
-                        //fig1.destroy()
+                            if(fig1.check_field(MyField, index)) {
+                                fig1.fill_field(MyField, index, "red")
+                                fig1.destroy()
+                            }
+                            else
+                                fig1.fill_field(MyField, index, "white")
+                        }
+
                     }
-                }
-
-                onExited: {
-                    console.log("Exit")
-                    //field.state = "clear"
-                }
 
             }
     }
 }
-
-

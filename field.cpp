@@ -1,5 +1,7 @@
 #include "field.h"
 
+
+
 Field::Field(QObject *parent) :
     QAbstractListModel(parent)
 {
@@ -60,4 +62,6 @@ QColor Field::getColor(int index) const
 void Field::setColor(const int index, const QString &color)
 {
    m_color.replace(index, color);
+   QModelIndex mod_index = createIndex(index, 0);
+   emit dataChanged(mod_index, mod_index, QVector<int>() << 0);
 }

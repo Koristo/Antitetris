@@ -110,4 +110,6 @@ void Figure1::fill_field(Field *field, int index, QString color)
                 break;
             }
         }
+
+
 }
