@@ -2,10 +2,11 @@ import QtQuick 2.12
 import QtQuick.Window 2.1
 import QtQuick.Controls 2.0
 import Figure_1 1.0
+import Figure_2 1.0
 
 Item {
     id: root
-    width: 850
+    width: 665
     height: 500
 
     Frame {
@@ -17,22 +18,23 @@ Item {
                 radius: 3
             }
         id: separator
-        width: root.width / 100 * 40
+        width: root.width / 100 * 25
         height: root.height
         anchors.right: root.right
         z: 3
 
         Fig_1 {
-
+            x: 0
+            y: 0
             Drag.hotSpot.x: 0
             Drag.hotSpot.y: 0
-            Drag.active: ma.drag.active
+            Drag.active: ma_1.drag.active
             id: fig1
-            width: 300
-            height: 300
+            width: 225
+            height: 225
 
             MouseArea {
-                id: ma
+                id: ma_1
                 anchors.fill: parent
 
                 onPressed: {
@@ -42,7 +44,6 @@ Item {
 
                 }
                 onReleased: {
-
                     drag.target = null
                     fig1.x = 0
                     fig1.y = 0
@@ -59,6 +60,45 @@ Item {
             }
         }
 
+        Fig_2 {
+            x: 0
+            y: 150
+            Drag.hotSpot.x: 50
+            Drag.hotSpot.y: 0
+            Drag.active: ma_2.drag.active
+            id: fig2
+            width: 225
+            height: 225
+
+            MouseArea {
+                id: ma_2
+                anchors.fill: parent
+
+                onPressed: {
+                    if (fig2.in_figure(mouseX, mouseY, MyField)) {
+                        drag.target = parent
+                    }
+
+                }
+                onReleased: {
+                    drag.target = null
+                    fig2.x = 0
+                    fig2.y = 225
+                    parent.Drag.drop()
+                }
+            }
+
+            Behavior on x {
+                NumberAnimation {duration:500}
+            }
+
+            Behavior on y {
+                NumberAnimation {duration:500}
+            }
+        }
+
+
+
     }
 
 
@@ -68,7 +108,6 @@ Item {
         model: MyField
         delegate:
             Rectangle {
-                    //anchors.fill: parent
                     id: field
                     width: 100
                     height: 100
@@ -85,25 +124,24 @@ Item {
 
                         onEntered: {
                             console.warn("Entered")
-                            if (fig1.check_field(MyField, index)) {
-                                fig1.fill_field(MyField, index, "grey")
+                            if (drag.source.check_field(MyField, index)) {
+                                drag.source.fill_field(MyField, index, "grey")
                             }
                         }
 
                         onExited: {
                             console.log("Exit")
-                            if (fig1.check_field(MyField, index))
-                                fig1.fill_field(MyField, index, "white")
+                            if (drag.source.check_field(MyField, index))
+                                drag.source.fill_field(MyField, index, "white")
                         }
                         onDropped: {
                             console.log("dropped")
 
-                            if(fig1.check_field(MyField, index)) {
-                                fig1.fill_field(MyField, index, "red")
-                                fig1.destroy()
+                            if(drag.source.check_field(MyField, index)) {
+                                drag.source.fill_field(MyField, index, "red")
+                                //drag.source.destroy()
                             }
-                            else
-                                fig1.fill_field(MyField, index, "white")
+
                         }
 
                     }

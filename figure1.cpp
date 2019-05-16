@@ -10,22 +10,22 @@ void Figure1::paint(QPainter *painter)
 {
     QPainterPath path;
     path.moveTo(0, 0);
-    path.lineTo(300, 0);
-    path.lineTo(300, 100);
-    path.lineTo(0, 100);
+    path.lineTo(150, 0);
+    path.lineTo(150, 50);
+    path.lineTo(0, 50);
     path.lineTo(0, 0);
     painter->fillPath(path, QBrush(color));
-    path.moveTo(100, 100);
-    path.lineTo(100, 200);
-    path.lineTo(200, 200);
-    path.lineTo(200, 100);
+    path.moveTo(50, 50);
+    path.lineTo(50, 100);
+    path.lineTo(100, 100);
+    path.lineTo(100, 50);
     painter->fillPath(path, QBrush(color));
 }
 
 bool Figure1::in_figure(double x, double y)
 {
     bool in = false;
-    if((x>=0 && x<= 300 && y>=0 && y<=100) || (x>=100 && x<=200 && y>=100 && y<=200))
+    if((x>=0 && x<= 150 && y>=0 && y<=50) || (x>=50 && x<=100 && y>=50 && y<=100))
             in = true;
 
     return in;
@@ -33,8 +33,8 @@ bool Figure1::in_figure(double x, double y)
 
 bool Figure1::check_field(Field *field, int index)
 {
-    qDebug() << index;
-    qDebug() << field->getColor(index);
+    //qDebug() << index;
+    //qDebug() << field->getColor(index);
     int current_index = index;
     bool check = true;
 
@@ -110,6 +110,7 @@ void Figure1::fill_field(Field *field, int index, QString color)
                 break;
             }
         }
-
+    if (color == "red")
+        field->check_occupancy_field();
 
 }

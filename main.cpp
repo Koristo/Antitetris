@@ -1,4 +1,5 @@
 #include "figure1.h"
+#include "figure2.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -14,11 +15,14 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<Figure1>("Figure_1", 1, 0, "Fig_1");
+    qmlRegisterType<Figure2>("Figure_2", 1, 0, "Fig_2");
 
     QQmlApplicationEngine engine;
-    Field *my_field = new Field(&engine);
-    for(int i=0; i<5; i++)
-        for(int j=0; j<5; j++)
+    int rows = 5;
+    int columns = 5;
+    Field *my_field = new Field(rows, columns, &engine);
+    for(int i=0; i<rows; i++)
+        for(int j=0; j<columns; j++)
             my_field->add(i, 100 * i, 100 * j);
 
 

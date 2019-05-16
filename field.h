@@ -19,13 +19,16 @@ public:
         index
     };
 
-    explicit Field(QObject *parent = nullptr);
+    explicit Field(int _rows, int _columns, QObject *parent = nullptr);
     void add(int i, int x, int y, QString _color = "white");
     int rowCount(const QModelIndex &parent) const ;
     QHash<int, QByteArray> roleNames() const ;
     QVariant data(const QModelIndex &index, int role) const;
     void setColor(const int index, const QString &color);
     QColor getColor(int index) const;
+    void clear_row(int row);
+    void clear_column(int column);
+    Q_INVOKABLE void check_occupancy_field();
 
 private:
     QHash<int, QByteArray> my_data;
@@ -34,6 +37,8 @@ private:
     QList<int> m_coor_y;
     QList<int> m_index;
     QList<int> m_intData;
+    int rows;
+    int columns;
 signals:
 
 };

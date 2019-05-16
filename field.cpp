@@ -2,13 +2,15 @@
 
 
 
-Field::Field(QObject *parent) :
+Field::Field(int _rows, int _columns, QObject *parent) :
     QAbstractListModel(parent)
 {
     my_data.insert(color, "ColorData");
     my_data.insert(coor_x, "field_x");
     my_data.insert(coor_y, "field_y");
     my_data.insert(index, "field_index");
+    rows = _rows;
+    columns = _columns;
 }
 
 void Field::add(int i, int x, int y, QString _color)
@@ -64,4 +66,52 @@ void Field::setColor(const int index, const QString &color)
    m_color.replace(index, color);
    QModelIndex mod_index = createIndex(index, 0);
    emit dataChanged(mod_index, mod_index, QVector<int>() << 0);
+}
+
+void Field::clear_row(int row)
+{
+    for (int index = row; index<row + rows; index++)
+        setColor(index, "white");
+}
+
+void Field::clear_column(int column)
+{
+    for (int index = column; index<rows * columns; index+=columns)
+        setColor(index, "white");
+}
+
+void Field::check_occupancy_field()
+{
+    QList<int> filled_columns;
+    QList<int> filled_rows;
+
+    for(int col_num = 0; col_num<columns; col_num++) {
+        bool check = true;
+        for (int index_col = col_num; index_col<25; index_col+=5)
+            if (getColor(index_col) != "red") {
+                check = false;
+                break;
+            }
+        if (check)
+            filled_columns.append(col_num);
+
+    }
+
+    for(int row_num = 0; row_num<rows * columns; row_num+=rows) {
+
+        bool check = true;
+        for(int index_row = row_num; index_row<row_num + rows; index_row++)
+            if (getColor(index_row) != "red") {
+                check = false;
+                break;
+            }
+        if (check)
+            filled_rows.append(row_num);
+    }
+
+    for(auto row : filled_rows)
+        clear_row(row);
+
+    for(auto column : filled_columns)
+        clear_column(column);
 }
