@@ -115,3 +115,84 @@ void Field::check_occupancy_field()
     for(auto column : filled_columns)
         clear_column(column);
 }
+
+bool Field::check_field(int index, QList<char> form)
+{
+    int current_index = index;
+    bool check = true;
+
+        if (getColor(current_index) == QColor("red"))
+            check = false;
+        else
+            for (auto num : form)
+                switch(num) {
+                    case 'u': {
+                        if (current_index >= 0 && current_index <=4)
+                            return false;
+                        if (getColor(current_index - 5) == "red")
+                            return false;
+                        else current_index -= 5;
+                        break;
+                    }
+                    case 'r': {
+                        if (current_index == 4 || current_index == 9 || current_index == 14
+                                || current_index == 19 || current_index == 24)
+                            return false;
+                        if (getColor(current_index + 1) == "red")
+                            return false;
+                        else current_index += 1;
+                        break;
+                    }
+                    case 'd': {
+                        if (current_index >= 20 && current_index <=24)
+                            return false;
+                        if (getColor(current_index + 5) == "red")
+                            return false;
+                        else current_index += 5;
+                        break;
+                    }
+                    case 'l': {
+                        if (current_index % 5 == 0)
+                            return false;
+                        if (getColor(current_index - 1) == "red")
+                            return false;
+                        else current_index -= 1;
+                        break;
+                    }
+
+                }
+
+    qDebug() << check;
+    return check;
+}
+
+void Field::fill_field(int index, QString color, QList<char> form)
+{
+    int current_index = index;
+    setColor(current_index, color);
+    for (auto num : form)
+        switch(num) {
+            case 'u': {
+                current_index -= 5;
+                setColor(current_index, color);
+                break;
+            }
+            case 'r': {
+                current_index += 1;
+                setColor(current_index, color);
+                break;
+            }
+            case 'd': {
+                current_index += 5;
+                setColor(current_index, color);
+                break;
+            }
+            case 'l': {
+                current_index -= 1;
+                setColor(current_index, color);
+                break;
+            }
+        }
+    if (color == "red")
+        check_occupancy_field();
+}

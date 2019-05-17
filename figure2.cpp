@@ -72,8 +72,6 @@ bool Figure2::check_field(Field *field, int index)
                 }
 
             }
-
-qDebug() << check;
 return check;
 }
 
@@ -106,4 +104,9 @@ void Figure2::fill_field(Field *field, int index, QString color)
         }
     if (color == "red")
         field->check_occupancy_field();
+}
+
+QList<char> Figure2::getForm() const
+{
+    return form;
 }

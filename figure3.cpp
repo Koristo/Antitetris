@@ -1,37 +1,38 @@
-#include "figure1.h"
+#include "figure3.h"
 
-Figure1::Figure1(QQuickItem *parent):
+Figure3::Figure3(QQuickItem *parent):
     QQuickPaintedItem(parent)
 {
 
 }
 
-void Figure1::paint(QPainter *painter)
+void Figure3::paint(QPainter *painter)
 {
     QPainterPath path;
     path.moveTo(0, 0);
-    path.lineTo(150, 0);
-    path.lineTo(150, 50);
+    path.lineTo(100, 0);
+    path.lineTo(100, 50);
     path.lineTo(0, 50);
     path.lineTo(0, 0);
     painter->fillPath(path, QBrush(color));
     path.moveTo(50, 50);
+    path.lineTo(150, 50);
+    path.lineTo(150, 100);
     path.lineTo(50, 100);
-    path.lineTo(100, 100);
-    path.lineTo(100, 50);
+    path.lineTo(50, 50);
     painter->fillPath(path, QBrush(color));
 }
 
-bool Figure1::in_figure(double x, double y)
+bool Figure3::in_figure(double x, double y)
 {
     bool in = false;
-    if((x>=0 && x<= 150 && y>=0 && y<=50) || (x>=50 && x<=100 && y>=50 && y<=100))
+    if((x>=0 && x<= 100 && y>=0 && y<=50) || (x>=50 && x<=150 && y>=50 && y<=100))
             in = true;
 
     return in;
 }
 
-bool Figure1::check_field(Field *field, int index)
+bool Figure3::check_field(Field *field, int index)
 {
     int current_index = index;
     bool check = true;
@@ -79,7 +80,7 @@ bool Figure1::check_field(Field *field, int index)
     return check;
 }
 
-void Figure1::fill_field(Field *field, int index, QString color)
+void Figure3::fill_field(Field *field, int index, QString color)
 {
     int current_index = index;
     field->setColor(current_index, color);

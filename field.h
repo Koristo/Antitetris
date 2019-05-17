@@ -29,6 +29,8 @@ public:
     void clear_row(int row);
     void clear_column(int column);
     Q_INVOKABLE void check_occupancy_field();
+    Q_INVOKABLE bool check_field(int index, QList<char> form);
+    Q_INVOKABLE void fill_field(int index, QString color, QList<char> form);
 
 private:
     QHash<int, QByteArray> my_data;

@@ -1,5 +1,6 @@
 #include "figure1.h"
 #include "figure2.h"
+#include "figure3.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Figure1>("Figure_1", 1, 0, "Fig_1");
     qmlRegisterType<Figure2>("Figure_2", 1, 0, "Fig_2");
+    qmlRegisterType<Figure3>("Figure_3", 1, 0, "Fig_3");
 
     QQmlApplicationEngine engine;
     int rows = 5;
@@ -27,11 +29,9 @@ int main(int argc, char *argv[])
 
 
     engine.rootContext()->setContextProperty("MyField", my_field);
-    QQuickView view(&engine, nullptr);
-    view.setSource(QUrl(QStringLiteral("qrc:/main.qml")));
-    view.setResizeMode(QQuickView::SizeRootObjectToView);
-
-    view.show();
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
 
     return app.exec();
 }

@@ -17,6 +17,7 @@ SOURCES += \
         figure.cpp \
         figure1.cpp \
         figure2.cpp \
+        figure3.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -36,4 +37,5 @@ HEADERS += \
     field.h \
     figure.h \
     figure1.h \
-    figure2.h
+    figure2.h \
+    figure3.h

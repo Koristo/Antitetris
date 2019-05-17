@@ -1,15 +1,21 @@
 import QtQuick 2.12
-import QtQuick.Window 2.1
+import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
 import Figure_1 1.0
 import Figure_2 1.0
 
-Item {
+Window {
+    visible: true
+    property int figures: 3
+    property var my_obj
     id: root
     width: 665
     height: 500
 
     Frame {
+        width: root.width / 100 * 25
+        height: root.height
+        anchors.right: parent.right
         background:
             Rectangle {
                 color: "grey"
@@ -18,86 +24,32 @@ Item {
                 radius: 3
             }
         id: separator
-        width: root.width / 100 * 25
-        height: root.height
-        anchors.right: root.right
-        z: 3
+        z: 2
 
-        Fig_1 {
-            x: 0
-            y: 0
-            Drag.hotSpot.x: 0
-            Drag.hotSpot.y: 0
-            Drag.active: ma_1.drag.active
-            id: fig1
-            width: 225
-            height: 225
-
-            MouseArea {
-                id: ma_1
-                anchors.fill: parent
-
-                onPressed: {
-                    if (fig1.in_figure(mouseX, mouseY, MyField)) {
-                        drag.target = parent
-                    }
-
+        Component.onCompleted: {
+            for (var fig_num = 0; fig_num < figures; fig_num++){
+                switch(Math.floor(Math.random() * 3)) {
+                case 0:
+                    var component = Qt.createComponent("Figure1.qml")
+                    my_obj = component.createObject(separator.contentItem, {y: fig_num * 150 + fig_num * 10, z:4})
+                    my_obj.coor_y = fig_num * 150 + fig_num * 10
+                    my_obj.index = fig_num
+                    break
+                case 1:
+                    component = Qt.createComponent("Figure2.qml")
+                    my_obj = component.createObject(separator.contentItem, {y: fig_num * 150 + fig_num * 10, z:3})
+                    my_obj.coor_y = fig_num * 150 + fig_num * 10
+                    my_obj.index = fig_num
+                    break
+                case 2:
+                    component = Qt.createComponent("Figure3.qml")
+                    my_obj = component.createObject(separator.contentItem, {y: fig_num * 150 + fig_num * 10, z:3})
+                    my_obj.coor_y = fig_num * 150 + fig_num * 10
+                    my_obj.index = fig_num
+                    break
                 }
-                onReleased: {
-                    drag.target = null
-                    fig1.x = 0
-                    fig1.y = 0
-                    parent.Drag.drop()
-                }
-            }
-
-            Behavior on x {
-                NumberAnimation {duration:500}
-            }
-
-            Behavior on y {
-                NumberAnimation {duration:500}
             }
         }
-
-        Fig_2 {
-            x: 0
-            y: 150
-            Drag.hotSpot.x: 50
-            Drag.hotSpot.y: 0
-            Drag.active: ma_2.drag.active
-            id: fig2
-            width: 225
-            height: 225
-
-            MouseArea {
-                id: ma_2
-                anchors.fill: parent
-
-                onPressed: {
-                    if (fig2.in_figure(mouseX, mouseY, MyField)) {
-                        drag.target = parent
-                    }
-
-                }
-                onReleased: {
-                    drag.target = null
-                    fig2.x = 0
-                    fig2.y = 225
-                    parent.Drag.drop()
-                }
-            }
-
-            Behavior on x {
-                NumberAnimation {duration:500}
-            }
-
-            Behavior on y {
-                NumberAnimation {duration:500}
-            }
-        }
-
-
 
     }
 
@@ -108,43 +60,61 @@ Item {
         model: MyField
         delegate:
             Rectangle {
-                    id: field
+                id: field
+                width: 100
+                height: 100
+                color: ColorData
+                border.width: 1
+                x: field_x
+                y: field_y
+
+                DropArea {
+                    anchors.fill: parent
+                    id: da
                     width: 100
                     height: 100
-                    color: ColorData
-                    border.width: 1
-                    x: field_x
-                    y: field_y
 
-                    DropArea {
-                        anchors.fill: parent
-                        id: da
-                        width: 100
-                        height: 100
-
-                        onEntered: {
-                            console.warn("Entered")
-                            if (drag.source.check_field(MyField, index)) {
-                                drag.source.fill_field(MyField, index, "grey")
-                            }
+                    onEntered: {
+                        if (drag.source.check_field(MyField, index)) {
+                            drag.source.fill_field(MyField, index, "grey")
                         }
+                    }
 
-                        onExited: {
-                            console.log("Exit")
-                            if (drag.source.check_field(MyField, index))
-                                drag.source.fill_field(MyField, index, "white")
-                        }
-                        onDropped: {
-                            console.log("dropped")
+                    onExited: {
+                        if (drag.source.check_field(MyField, index))
+                            drag.source.fill_field(MyField, index, "white")
+                    }
+                    onDropped: {
+                        if(drag.source.check_field(MyField, index)) {
+                            drag.source.fill_field(MyField, index, "red")
+                            var new_index = drag.source.index
+                            drag.source.destroy()
 
-                            if(drag.source.check_field(MyField, index)) {
-                                drag.source.fill_field(MyField, index, "red")
-                                //drag.source.destroy()
+                            switch(Math.floor(Math.random() * 3)) {
+                            case 0:
+                                var component = Qt.createComponent("Figure1.qml")
+                                my_obj = component.createObject(separator.contentItem, {y: new_index * 150 + new_index * 10, z:3})
+                                my_obj.coor_y = new_index * 150 + new_index * 10
+                                my_obj.index = new_index
+                                break
+                            case 1:
+                                component = Qt.createComponent("Figure2.qml")
+                                my_obj = component.createObject(separator.contentItem, {y: new_index * 150 + new_index * 10, z:3})
+                                my_obj.coor_y = new_index * 150 + new_index * 10
+                                my_obj.index = new_index
+                                break
+                            case 2:
+                                component = Qt.createComponent("Figure3.qml")
+                                my_obj = component.createObject(separator.contentItem, {y: new_index * 150 + new_index * 10, z:3})
+                                my_obj.coor_y = new_index * 150 + new_index * 10
+                                my_obj.index = new_index
+                                break
                             }
-
                         }
 
                     }
+
+                }
 
             }
     }
