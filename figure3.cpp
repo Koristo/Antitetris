@@ -110,3 +110,13 @@ void Figure3::fill_field(Field *field, int index, QString color)
     if (color == "red")
         field->check_occupancy_field();
 }
+
+QList<char> Figure3::get_form() const
+{
+    return form;
+}
+
+void Figure3::edit_figure_in_list(Field *field, int index)
+{
+    field->edit_list_figure(form, index);
+}

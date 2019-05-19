@@ -1,13 +1,14 @@
 #include "figure1.h"
 #include "figure2.h"
 #include "figure3.h"
+#include "field.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickView>
 #include <QDebug>
 #include <QQmlContext>
-#include "field.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +19,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<Figure1>("Figure_1", 1, 0, "Fig_1");
     qmlRegisterType<Figure2>("Figure_2", 1, 0, "Fig_2");
     qmlRegisterType<Figure3>("Figure_3", 1, 0, "Fig_3");
+
+    qRegisterMetaType<QList<char>>("char_list");
 
     QQmlApplicationEngine engine;
     int rows = 5;

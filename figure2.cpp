@@ -106,7 +106,12 @@ void Figure2::fill_field(Field *field, int index, QString color)
         field->check_occupancy_field();
 }
 
-QList<char> Figure2::getForm() const
+QList<char> Figure2::get_form() const
 {
     return form;
+}
+
+void Figure2::edit_figure_in_list(Field *field, int index)
+{
+    field->edit_list_figure(form, index);
 }

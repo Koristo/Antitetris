@@ -109,3 +109,26 @@ void Figure1::fill_field(Field *field, int index, QString color)
     if (color == "red")
         field->check_occupancy_field();
 }
+
+void Figure1::edit_figure_in_list(Field *field, int index)
+{
+    //emit edit_list(index);
+    field->edit_list_figure(form, index);
+}
+
+QList<char> Figure1::get_form() const
+{
+    return form;
+}
+
+void Figure1::add_figure()
+{
+    emit new_figure(form);
+}
+
+bool Figure1::check_end_of_game(Field *field)
+{
+    bool check = false;
+
+    return check;
+}

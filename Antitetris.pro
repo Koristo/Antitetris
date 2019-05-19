@@ -1,4 +1,5 @@
 QT += quick
+QT += widgets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -14,7 +15,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         field.cpp \
-        figure.cpp \
         figure1.cpp \
         figure2.cpp \
         figure3.cpp \
@@ -35,7 +35,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     field.h \
-    figure.h \
     figure1.h \
     figure2.h \
     figure3.h

@@ -5,6 +5,10 @@ Fig_2 {
     property var coor_x: 0
     property var coor_y: 0
     property int index
+    property bool alive: true
+
+    onAliveChanged: fig2.destroy
+
     x: coor_x
     y: coor_y
     Drag.hotSpot.x: 50

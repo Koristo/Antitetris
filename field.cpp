@@ -116,7 +116,7 @@ void Field::check_occupancy_field()
         clear_column(column);
 }
 
-bool Field::check_field(int index, QList<char> form)
+bool Field::check_field(int index)
 {
     int current_index = index;
     bool check = true;
@@ -124,7 +124,7 @@ bool Field::check_field(int index, QList<char> form)
         if (getColor(current_index) == QColor("red"))
             check = false;
         else
-            for (auto num : form)
+            for (auto num : list_figure[index])
                 switch(num) {
                     case 'u': {
                         if (current_index >= 0 && current_index <=4)
@@ -166,11 +166,11 @@ bool Field::check_field(int index, QList<char> form)
     return check;
 }
 
-void Field::fill_field(int index, QString color, QList<char> form)
+void Field::fill_field(int index, QString color)
 {
     int current_index = index;
     setColor(current_index, color);
-    for (auto num : form)
+    for (auto num : list_figure[index])
         switch(num) {
             case 'u': {
                 current_index -= 5;
@@ -195,4 +195,73 @@ void Field::fill_field(int index, QString color, QList<char> form)
         }
     if (color == "red")
         check_occupancy_field();
+}
+
+void Field::add_list_figure(const QList<char> &value)
+{
+    list_figure.append(value);
+}
+
+void Field::edit_list_figure(const QList<char> &value, int index)
+{
+    list_figure.replace(index, value);
+}
+
+bool Field::check_turns()
+{
+    qDebug() << "hello";
+    for (auto figure : list_figure)
+        for (int cell_num=0; cell_num < rows * columns; cell_num++)
+            if (check_figure(cell_num, figure))
+                return true;
+
+    return false;
+}
+
+bool Field::check_figure(int cell_num, QList<char> figure) {
+    int current_index = cell_num;
+    bool check = true;
+
+        if (getColor(current_index) == QColor("red"))
+            check = false;
+        else
+            for (auto num : figure)
+                switch(num) {
+                    case 'u': {
+                        if (current_index >= 0 && current_index <=4)
+                            return false;
+                        if (getColor(current_index - 5) == "red")
+                            return false;
+                        else current_index -= 5;
+                        break;
+                    }
+                    case 'r': {
+                        if (current_index == 4 || current_index == 9 || current_index == 14
+                                || current_index == 19 || current_index == 24)
+                            return false;
+                        if (getColor(current_index + 1) == "red")
+                            return false;
+                        else current_index += 1;
+                        break;
+                    }
+                    case 'd': {
+                        if (current_index >= 20 && current_index <=24)
+                            return false;
+                        if (getColor(current_index + 5) == "red")
+                            return false;
+                        else current_index += 5;
+                        break;
+                    }
+                    case 'l': {
+                        if (current_index % 5 == 0)
+                            return false;
+                        if (getColor(current_index - 1) == "red")
+                            return false;
+                        else current_index -= 1;
+                        break;
+                    }
+                }
+
+    qDebug() << check;
+    return check;
 }
