@@ -1,13 +1,11 @@
 import QtQuick 2.0
-import Figure_1 1.0
+import Figures 1.0
 
 Fig_1 {
+
     property var coor_x: 0
     property var coor_y: 0
     property int index
-    property bool alive: true
-
-    onAliveChanged: fig1.destroy
 
     x: coor_x
     y: coor_y
@@ -23,12 +21,15 @@ Fig_1 {
         anchors.fill: parent
 
         onPressed: {
+
             if (fig1.in_figure(mouseX, mouseY, MyField)) {
+                fig1.scale = 2
                 drag.target = parent
             }
 
         }
         onReleased: {
+            fig1.scale = 1
             drag.target = null
             fig1.x = coor_x
             fig1.y = coor_y
@@ -42,5 +43,11 @@ Fig_1 {
 
     Behavior on y {
         NumberAnimation {duration:500}
+    }
+
+    Behavior on scale {
+        NumberAnimation {
+            duration: 500
+        }
     }
 }

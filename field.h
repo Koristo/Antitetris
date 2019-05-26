@@ -29,14 +29,13 @@ public:
     void clear_row(int row);
     void clear_column(int column);
     bool check_figure(int cell_num, QList<char> figure);
-
-
     Q_INVOKABLE void check_occupancy_field();
-    Q_INVOKABLE bool check_field(int index);
-    Q_INVOKABLE void fill_field(int index, QString color);
+    Q_INVOKABLE bool check_field(int index, QList <char> form);
+    Q_INVOKABLE void fill_field(int index, QString color, QList <char> form);
+    Q_INVOKABLE bool check_turns();
+
     Q_INVOKABLE void add_list_figure(const QList<char> &value);
     Q_INVOKABLE void edit_list_figure(const QList<char> &value, int index);
-    Q_INVOKABLE bool check_turns();
 
 private:
     QHash<int, QByteArray> my_data;
@@ -48,9 +47,6 @@ private:
     QList<QList<char>> list_figure;
     int rows;
     int columns;
-
-//private slots:
-//    static void add_in_list(QList<char> form);
 
 };
 

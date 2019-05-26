@@ -116,7 +116,7 @@ void Field::check_occupancy_field()
         clear_column(column);
 }
 
-bool Field::check_field(int index)
+bool Field::check_field(int index, QList<char> form)
 {
     int current_index = index;
     bool check = true;
@@ -124,8 +124,8 @@ bool Field::check_field(int index)
         if (getColor(current_index) == QColor("red"))
             check = false;
         else
-            for (auto num : list_figure[index])
-                switch(num) {
+            for (auto way : form)
+                switch(way) {
                     case 'u': {
                         if (current_index >= 0 && current_index <=4)
                             return false;
@@ -162,16 +162,15 @@ bool Field::check_field(int index)
 
                 }
 
-    qDebug() << check;
     return check;
 }
 
-void Field::fill_field(int index, QString color)
+void Field::fill_field(int index, QString color, QList <char> form)
 {
     int current_index = index;
     setColor(current_index, color);
-    for (auto num : list_figure[index])
-        switch(num) {
+    for (auto way : form)
+        switch(way) {
             case 'u': {
                 current_index -= 5;
                 setColor(current_index, color);
@@ -209,7 +208,6 @@ void Field::edit_list_figure(const QList<char> &value, int index)
 
 bool Field::check_turns()
 {
-    qDebug() << "hello";
     for (auto figure : list_figure)
         for (int cell_num=0; cell_num < rows * columns; cell_num++)
             if (check_figure(cell_num, figure))
@@ -262,6 +260,5 @@ bool Field::check_figure(int cell_num, QList<char> figure) {
                     }
                 }
 
-    qDebug() << check;
     return check;
 }

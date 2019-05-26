@@ -16,9 +16,9 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<Figure1>("Figure_1", 1, 0, "Fig_1");
-    qmlRegisterType<Figure2>("Figure_2", 1, 0, "Fig_2");
-    qmlRegisterType<Figure3>("Figure_3", 1, 0, "Fig_3");
+    qmlRegisterType<Figure1>("Figures", 1, 0, "Fig_1");
+    qmlRegisterType<Figure2>("Figures", 1, 0, "Fig_2");
+    qmlRegisterType<Figure3>("Figures", 1, 0, "Fig_3");
 
     qRegisterMetaType<QList<char>>("char_list");
 

@@ -10,15 +10,15 @@ void Figure1::paint(QPainter *painter)
 {
     QPainterPath path;
     path.moveTo(0, 0);
-    path.lineTo(150, 0);
-    path.lineTo(150, 50);
-    path.lineTo(0, 50);
+    path.lineTo(size_cell * 3, 0);
+    path.lineTo(size_cell * 3, size_cell);
+    path.lineTo(0, size_cell);
     path.lineTo(0, 0);
     painter->fillPath(path, QBrush(color));
-    path.moveTo(50, 50);
-    path.lineTo(50, 100);
-    path.lineTo(100, 100);
-    path.lineTo(100, 50);
+    path.moveTo(size_cell, size_cell);
+    path.lineTo(size_cell, size_cell * 2);
+    path.lineTo(size_cell * 2, size_cell * 2);
+    path.lineTo(100, size_cell);
     painter->fillPath(path, QBrush(color));
 }
 
@@ -31,104 +31,8 @@ bool Figure1::in_figure(double x, double y)
     return in;
 }
 
-bool Figure1::check_field(Field *field, int index)
-{
-    int current_index = index;
-    bool check = true;
-
-        if (field->getColor(current_index) == QColor("red"))
-            check = false;
-        else
-            for (auto num : form)
-                switch(num) {
-                    case 'u': {
-                        if (current_index >= 0 && current_index <=4)
-                            return false;
-                        if (field->getColor(current_index - 5) == "red")
-                            return false;
-                        else current_index -= 5;
-                        break;
-                    }
-                    case 'r': {
-                        if (current_index == 4 || current_index == 9 || current_index == 14
-                                || current_index == 19 || current_index == 24)
-                            return false;
-                        if (field->getColor(current_index + 1) == "red")
-                            return false;
-                        else current_index += 1;
-                        break;
-                    }
-                    case 'd': {
-                        if (current_index >= 20 && current_index <=24)
-                            return false;
-                        if (field->getColor(current_index + 5) == "red")
-                            return false;
-                        else current_index += 5;
-                        break;
-                    }
-                    case 'l': {
-                        if (current_index % 5 == 0)
-                            return false;
-                        if (field->getColor(current_index - 1) == "red")
-                            return false;
-                        else current_index -= 1;
-                        break;
-                    }
-
-                }
-    return check;
-}
-
-void Figure1::fill_field(Field *field, int index, QString color)
-{
-    int current_index = index;
-    field->setColor(current_index, color);
-    for (auto num : form)
-        switch(num) {
-            case 'u': {
-                current_index -= 5;
-                field->setColor(current_index, color);
-                break;
-            }
-            case 'r': {
-                current_index += 1;
-                field->setColor(current_index, color);
-                break;
-            }
-            case 'd': {
-                current_index += 5;
-                field->setColor(current_index, color);
-                break;
-            }
-            case 'l': {
-                current_index -= 1;
-                field->setColor(current_index, color);
-                break;
-            }
-        }
-    if (color == "red")
-        field->check_occupancy_field();
-}
-
-void Figure1::edit_figure_in_list(Field *field, int index)
-{
-    //emit edit_list(index);
-    field->edit_list_figure(form, index);
-}
 
 QList<char> Figure1::get_form() const
 {
     return form;
-}
-
-void Figure1::add_figure()
-{
-    emit new_figure(form);
-}
-
-bool Figure1::check_end_of_game(Field *field)
-{
-    bool check = false;
-
-    return check;
 }
