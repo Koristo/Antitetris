@@ -3,8 +3,9 @@ import Figures 1.0
 
 Fig_1 {
 
-    property var coor_x: 0
-    property var coor_y: 0
+    property int coor_x: 0
+    property int coor_y: 0
+    property int index_fig: 0
     property int index
 
     x: coor_x

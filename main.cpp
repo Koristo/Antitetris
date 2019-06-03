@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<Figure3>("Figures", 1, 0, "Fig_3");
 
     qRegisterMetaType<QList<char>>("char_list");
+    qRegisterMetaType<QList<int>>("int_list");
+    qRegisterMetaType<QMap<int, int>>("figure_info");
 
     QQmlApplicationEngine engine;
     int rows = 5;

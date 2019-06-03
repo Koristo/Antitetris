@@ -4,6 +4,7 @@
 #include <QQuickItem>
 #include <QPainter>
 #include <QQuickPaintedItem>
+#include <QAbstractListModel>
 //#include "field.h"
 
 class Figure1: public QQuickPaintedItem

@@ -61,7 +61,7 @@ QColor Field::getColor(int index) const
     return m_color.at(index);
 }
 
-void Field::setColor(const int index, const QString &color)
+void Field::setColor(const int index, const QColor &color)
 {
    m_color.replace(index, color);
    QModelIndex mod_index = createIndex(index, 0);
@@ -165,8 +165,20 @@ bool Field::check_field(int index, QList<char> form)
     return check;
 }
 
-void Field::fill_field(int index, QString color, QList <char> form)
+void Field::fill_field(int index, QColor color, QList <char> form, int index_fig_in_list, int fig_index)
 {
+    if(color == "red") {
+        qDebug() << "Change cells info";
+        QMap<int, QColor> info;
+        int cells = rows * columns;
+        for(int cell = 0; cell < cells; cell++) {
+            QColor color = getColor(cell);
+            if (color == "grey")
+                color = "white";
+            info.insert(cell, color);
+        }
+        cells_info.append(info);
+    }
     int current_index = index;
     setColor(current_index, color);
     for (auto way : form)
@@ -201,9 +213,42 @@ void Field::add_list_figure(const QList<char> &value)
     list_figure.append(value);
 }
 
+void Field::add_info_figure(const QList<int> list_figure)
+{
+    used_figure.append(list_figure);
+}
+
+QList<int> Field::get_info_figure()
+{
+    return used_figure.last();
+}
+
 void Field::edit_list_figure(const QList<char> &value, int index)
 {
     list_figure.replace(index, value);
+}
+
+void Field::cancel_turn()
+{
+    qDebug() << "Canсel the turn";
+    if (!cells_info.isEmpty()) {
+        for(auto cell = cells_info.last().begin(); cell != cells_info.last().end(); cell++) {
+            setColor(cell.key(), cell.value());
+        }
+        cells_info.pop_back();
+        if(used_figure.length() != 1)
+            used_figure.pop_back();
+    }
+}
+
+void Field::save_game()
+{
+    qDebug() << "Save the game";
+}
+
+void Field::load_game()
+{
+    qDebug() << "Load the game";
 }
 
 bool Field::check_turns()
