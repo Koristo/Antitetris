@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QQuickPaintedItem>
 #include <QAbstractListModel>
-//#include "field.h"
+ #include <random>
 
 class Figure1: public QQuickPaintedItem
 {
@@ -21,6 +21,7 @@ private:
     int size_cell = 50;
     QColor color = QColor("blue");
     QList<char> form = {'r', 'd', 'u', 'r'};
+    QList<int> new_form;
 
 };
 
