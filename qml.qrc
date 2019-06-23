@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>Figure1.qml</file>
-        <file>Figure2.qml</file>
-        <file>Figure3.qml</file>
+        <file>Figure.qml</file>
     </qresource>
 </RCC>

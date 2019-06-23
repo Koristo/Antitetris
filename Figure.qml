@@ -1,37 +1,34 @@
 import QtQuick 2.0
-import Figures 1.0
+import Figure 1.0
 
-Fig_3 {
+Figure {
+    id: fig
     property int coor_x: 0
-    property int coor_y: 0
-    property int index_fig: 2
+    property int coor_y
     property int index
 
-    x: coor_x
-    y: coor_y
-    Drag.hotSpot.x: 0
-    Drag.hotSpot.y: 0
-    Drag.active: ma_3.drag.active
-    id: fig3
-    width: 150
-    height: 150
+    Drag.active: ma.drag.active
+    z: 1
 
     MouseArea {
-        id: ma_3
+        id: ma
         anchors.fill: parent
 
         onPressed: {
-            if (fig3.in_figure(mouseX, mouseY, MyField)) {
-                fig3.scale = 2
+
+            if (fig.in_figure(mouseX, mouseY, MyField)) {
+                fig.z = 2
+                fig.scale = 1.5
                 drag.target = parent
             }
 
         }
         onReleased: {
-            fig3.scale = 1
+            fig.z = 1
+            fig.scale = 1
             drag.target = null
-            fig3.x = coor_x
-            fig3.y = coor_y
+            fig.x = coor_x
+            fig.y = coor_y
             parent.Drag.drop()
         }
     }

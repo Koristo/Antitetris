@@ -15,9 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         field.cpp \
-        figure1.cpp \
-        figure2.cpp \
-        figure3.cpp \
+        figure.cpp \
+        figuresModel.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -35,6 +34,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     field.h \
-    figure1.h \
-    figure2.h \
-    figure3.h
+    figure.h \
+    figuresModel.h
+
+DISTFILES += \
+    JSON/figures.json

@@ -7,11 +7,23 @@ import QtQuick.Dialogs 1.1
 ApplicationWindow {
     id: root
     visible: true
-    property int count_figures: 3
-    property var my_obj
-    width: 665
-    height: 500
+    property int myField_width: MyField.getColumns() * MyField.getSize_cell()
+    property int myField_height: MyField.getRows() * MyField.getSize_cell()
 
+    property int size_figure: FiguresField.getSize_cell() * 3
+    property int figuresField_width: size_figure + 25
+    property int figuresField_height: FiguresField.getFigures_count() * size_figure + FiguresField.getFigures_count() * 15
+
+    Component.onCompleted:
+        console.log("Sizes:",
+                    myField_width,
+                    myField_height,
+                    figuresField_width,
+                    figuresField_height,
+                    size_figure)
+    property var my_obj
+    width: myField_width + figuresField_width
+    height: myField_height > figuresField_height ? myField_height:figuresField_height
 
     menuBar: MenuBar {
               Menu {
@@ -19,37 +31,7 @@ ApplicationWindow {
                   MenuItem {
                       text: "Cancel the turn"
                       onTriggered: {
-                          var figure_list = fig_field.contentItem.children
-                          for(var fig_num = 0; fig_num< figure_list.length; fig_num++)
-                              figure_list[fig_num].destroy()
-                          var figures = MyField.get_info_figure()
-                          for(var i = 0; i < figures.length; i+=2) {
-                              var fig_index = figures[i]
-                              var fig_type = figures[i+1]
-                              switch(fig_type) {
-                                case 0:
-                                    var component = Qt.createComponent("Figure1.qml")
-                                    my_obj = component.createObject(fig_field.contentItem, {y: fig_index * 150 + fig_index * 10, z:4})
-                                    my_obj.coor_y = fig_index * 150 + fig_index * 10
-                                    my_obj.index = fig_index
-                                    break
-                                case 1:
-                                    component = Qt.createComponent("Figure2.qml")
-                                    my_obj = component.createObject(fig_field.contentItem, {y: fig_index * 150 + fig_index * 10, z:3})
-                                    my_obj.coor_y = fig_index * 150 + fig_index * 10
-                                    my_obj.index = fig_index
-                                    break
-                                case 2:
-                                    component = Qt.createComponent("Figure3.qml")
-                                    my_obj = component.createObject(fig_field.contentItem, {y: fig_index * 150 + fig_index * 10, z:3})
-                                    my_obj.coor_y = fig_index * 150 + fig_index * 10
-                                    my_obj.index = fig_index
-                                    break
-                                }
-                                MyField.edit_list_figure(my_obj.get_form(), fig_index)
-
-                          }
-                          MyField.cancel_turn()
+                          console.log("cansel the turn")
                       }
                   }
 
@@ -75,7 +57,8 @@ ApplicationWindow {
 
     Frame {
         id: fig_field
-        width: root.width / 100 * 25
+        z: 2
+        width: figuresField_width
         height: root.height
         anchors.right: parent.right
         background:
@@ -84,62 +67,52 @@ ApplicationWindow {
                 border.color: "black"
                 border.width: 3
                 radius: 3
-
-                Component.onCompleted: {
-                    for (var fig_num = 0; fig_num < count_figures; fig_num++){
-                        var fig_type = Math.floor(Math.random() * 3)
-                        switch(fig_type) {
-                        case 0:
-                            var component = Qt.createComponent("Figure1.qml")
-                            my_obj = component.createObject(fig_field.contentItem, {y: fig_num * 150 + fig_num * 10, z:4})
-                            my_obj.coor_y = fig_num * 150 + fig_num * 10
-                            my_obj.index = fig_num
-                            break
-                        case 1:
-                            component = Qt.createComponent("Figure2.qml")
-                            my_obj = component.createObject(fig_field.contentItem, {y: fig_num * 150 + fig_num * 10, z:3})
-                            my_obj.coor_y = fig_num * 150 + fig_num * 10
-                            my_obj.index = fig_num
-                            break
-                        case 2:
-                            component = Qt.createComponent("Figure3.qml")
-                            my_obj = component.createObject(fig_field.contentItem, {y: fig_num * 150 + fig_num * 10, z:3})
-                            my_obj.coor_y = fig_num * 150 + fig_num * 10
-                            my_obj.index = fig_num
-                            break
-                        }
-                        MyField.add_list_figure(my_obj.get_form())
-                    }
-                    var figure_list = fig_field.contentItem.children
-                    var list = []
-                    for(var fig_num = 0; fig_num< figure_list.length; fig_num++) {
-                        list.push(figure_list[fig_num].index)
-                        list.push(figure_list[fig_num].index_fig)
-                    }
-                    MyField.add_info_figure(list)
-                }
             }
-        z: 2
-
-
+            ListView {
+                interactive: false
+                id: list_figure
+                model: FiguresField
+                width: parent.width
+                height: parent.height
+                contentWidth: parent.width
+                contentHeight: parent.height
+                delegate:
+                    Rectangle {
+                        id: figure
+                        Component.onCompleted: {
+                            var component = Qt.createComponent("Figure.qml")
+                            var new_y = FigIndex * size_figure + FigIndex * 10
+                            my_obj = component.createObject(list_figure.contentItem, {
+                                                                y: new_y,
+                                                                width: size_figure,
+                                                                height: size_figure,
+                                                                index: FigIndex,
+                                                                coor_y: new_y,
+                                                                "Drag.hotSpot.x": HotSpotX,
+                                                                "Drag.hotSpot.y": HotSpotY})
+                            my_obj.setSize_cell(FiguresField.getSize_cell())
+                            my_obj.set_form(FiguresField.get_current_form(FigIndex))
+                            my_obj.setColor(ColorData)
+                        }
+                    }
+            }
     }
 
 
     GridView {
         interactive: false
-        width: 500
-        height: 500
         model: MyField
+        width: myField_width
+        height: myField_height
+        cellHeight: MyField.getSize_cell()
+        cellWidth: MyField.getSize_cell()
         delegate:
             Rectangle {
                 id: field
-                width: 100
-                height: 100
+                width: MyField.getSize_cell()
+                height: MyField.getSize_cell()
                 color: ColorData
                 border.width: 1
-                x: field_x
-                y: field_y
-
 
                 Behavior on color {
                     ColorAnimation {
@@ -150,8 +123,8 @@ ApplicationWindow {
                 DropArea {
                     anchors.fill: parent
                     id: da
-                    width: 100
-                    height: 100
+                    width: parent.width
+                    height: parent.height
 
                     onEntered: {
                         if (MyField.check_field(index, drag.source.get_form())) {
@@ -165,62 +138,37 @@ ApplicationWindow {
                     }
                     onDropped: {
                         if(MyField.check_field(index, drag.source.get_form())) {
-                            MyField.fill_field(index, "red", drag.source.get_form(), drag.source.index, drag.source.index_fig)
-                            var figure_list = fig_field.contentItem.children
-                            var list = []
-                            for(var fig_num = 0; fig_num< figure_list.length; fig_num++) {
-                                list.push(figure_list[fig_num].index)
-                                list.push(figure_list[fig_num].index_fig)
-                            }
-                            MyField.add_info_figure(list)
-                            var new_index = drag.source.index
+                            MyField.fill_field(index, "red", drag.source.get_form())
+                            var index_figure = drag.source.index
+                            var new_form = FiguresField.change_form(index_figure)
+                            var new_color = FiguresField.change_color(index_figure)
+                            var spot_x = FiguresField.get_x(index_figure)
+                            var spot_y = FiguresField.get_y(index_figure)
+                            console.log(index_figure, spot_x, spot_y)
                             drag.source.destroy()
 
-                            switch(Math.floor(Math.random() * 3)) {
-                            case 0:
-                                var component = Qt.createComponent("Figure1.qml")
-                                my_obj = component.createObject(fig_field.contentItem, {y: new_index * 150 + new_index * 10, z:3})
-                                my_obj.coor_y = new_index * 150 + new_index * 10
-                                my_obj.index = new_index
-                                MyField.edit_list_figure(my_obj.get_form(), new_index)
-                                if(!MyField.check_turns()) {
-                                    console.log("No turns!")
-                                    var figure_list = fig_field.contentItem.children
-                                    for(var fig_num = 0; fig_num< figure_list.length; fig_num++)
-                                        figure_list[fig_num].destroy()
-                                    msg.visible = true
-                                }
-                                break
+                            var new_y = index_figure * size_figure + index_figure * 10
+                            console.log(new_y)
+                            var component = Qt.createComponent("Figure.qml")
+                            my_obj = component.createObject(list_figure.contentItem, {
+                                                                y: new_y,
+                                                                width: size_figure,
+                                                                height: size_figure,
+                                                                index: index_figure,
+                                                                coor_y: new_y,
+                                                                "Drag.hotSpot.x": spot_x,
+                                                                "Drag.hotSpot.y": spot_y})
+                            my_obj.setSize_cell(FiguresField.getSize_cell())
+                            my_obj.set_form(new_form)
+                            my_obj.setColor(new_color)
 
-                            case 1:
-                                component = Qt.createComponent("Figure2.qml")
-                                my_obj = component.createObject(fig_field.contentItem, {y: new_index * 150 + new_index * 10, z:3})
-                                my_obj.coor_y = new_index * 150 + new_index * 10
-                                my_obj.index = new_index
-                                MyField.edit_list_figure(my_obj.get_form(), new_index)
-                                if(!MyField.check_turns()) {
-                                    console.log("No turns!")
-                                    var figure_list = fig_field.contentItem.children
-                                    for(var fig_num = 0; fig_num< figure_list.length; fig_num++)
-                                        figure_list[fig_num].destroy()
-                                    msg.visible = true
-                                }
-                                break
-
-                            case 2:
-                                component = Qt.createComponent("Figure3.qml")
-                                my_obj = component.createObject(fig_field.contentItem, {y: new_index * 150 + new_index * 10, z:3})
-                                my_obj.coor_y = new_index * 150 + new_index * 10
-                                my_obj.index = new_index
-                                MyField.edit_list_figure(my_obj.get_form(), new_index)
-                                if(!MyField.check_turns()) {
-                                    console.log("No turns!")
-                                    var figure_list = fig_field.contentItem.children
-                                    for(var fig_num = 0; fig_num< figure_list.length; fig_num++)
-                                        figure_list[fig_num].destroy()
-                                    msg.visible = true
-                                }
-                                break
+                            // проверка на возможность следующего хода
+                            var forms = FiguresField.get_forms()
+                            if (!MyField.check_turns(forms)) {
+                                var figure_list = fig_field.contentItem.children
+                                for(var fig_num = 0; fig_num< figure_list.length; fig_num++)
+                                    figure_list[fig_num].destroy()
+                                msg.visible = true
                             }
                         }
                     }
